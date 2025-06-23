@@ -3,17 +3,21 @@ import { error } from '@sveltejs/kit';
 export type PostMetaData = {
 	title: string;
 	date: Date;
+	categories: string[];
 };
-export async function load({ params }): Promise<{ content: any; title: string; date: Date }> {
+export async function load({
+	params
+}): Promise<{ content: any; title: string; date: Date; categories: string[] }> {
 	try {
 		const post = await import(`../${params.slug}.md`);
-		const { title, date } = post.metadata as PostMetaData;
+		const { title, date, categories } = post.metadata as PostMetaData;
 		const content = post.default;
 
 		return {
 			content,
 			title,
-			date
+			date,
+			categories
 		};
 	} catch (err) {
 		console.log(`failed to load: ${params.slug}`, err);
